@@ -7,14 +7,20 @@ public class Main {
 //        common mistake:
 //        anotherThread.run();
        anotherThread.start();//we can use only once
-        Thread threadColor = new ThreadColor();
-        threadColor.start();
+
 
         new Thread(){//anonymous class Thread
             public void run(){
                 System.out.println("Hello from the anonymous class thread");
+                try{
+                    anotherThread.join();
+                    System.out.println("Another thread terminated or timed out, so I'm running again");
+                }catch(InterruptedException e){
+                    System.out.println("I couldn't wait after all. I was interrupted");
+                }
             }
         }.start();
+
 //        Thread myRunnableThread = new Thread(new MyRunnable());
         Thread myRunnableThread = new Thread(new MyRunnable(){
             @Override
@@ -23,6 +29,7 @@ public class Main {
             }
         });
         myRunnableThread.start();
+//        anotherThread.interrupt();
 
         System.out.println("Hello Again from the main thread");
 
