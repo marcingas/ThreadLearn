@@ -2,7 +2,10 @@
 
 public class CounterMain {
     public static void main(String[] args) {
+        //if we create new instance of Countdown we will solve the problem.
+        // Often doesn't work in real world app
         Countdown countdown = new Countdown();
+
         CountdownThread t1 = new CountdownThread(countdown);
         t1.setName("Thread 1");
         CountdownThread t2 = new CountdownThread(countdown);
@@ -14,6 +17,9 @@ public class CounterMain {
 class Countdown{
 //    when you introduce private instance variable i insted of local variable in for loop you will get problematic print.
     private int i;
+    //add synchronized to make sure all threads aviod interference(ps. we can't synchro Constructors)
+//    it is first way to prevent race condition - second way is instead ofsynchronizing
+//    method we can synchronize a block of statement
     public void doCountdown(){
         String color;
         switch (Thread.currentThread().getName()){
@@ -26,8 +32,10 @@ class Countdown{
             default:
                 color= ThreadColor.ANSI_GREEN;
         }
-        for(i = 10; i>0; i--){
-            System.out.println(color + Thread.currentThread().getName()+ ": i = " + i);
+        synchronized (this) {
+            for (i = 10; i > 0; i--) {
+                System.out.println(color + Thread.currentThread().getName() + ": i = " + i);
+            }
         }
     }
 }
